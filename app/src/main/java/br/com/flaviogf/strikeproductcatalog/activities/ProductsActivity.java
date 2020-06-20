@@ -1,13 +1,15 @@
 package br.com.flaviogf.strikeproductcatalog.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
@@ -22,20 +24,27 @@ import br.com.flaviogf.strikeproductcatalog.viewmodels.ProductsViewModelFactory;
 public class ProductsActivity extends AppCompatActivity {
     private ProductListAdapter productListAdapter;
     private RecyclerView recyclerView;
+    private FloatingActionButton floatingActionButton;
     private ProductsViewModel viewModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_products);
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
         setTitle("Products");
 
         productListAdapter = new ProductListAdapter(this);
 
         recyclerView = findViewById(R.id.activity_products_recycler_view);
 
+        floatingActionButton = findViewById(R.id.activity_products_floating_action_button);
+
         recyclerView.setAdapter(productListAdapter);
+
+        floatingActionButton.setOnClickListener(it -> {
+            Intent intent = new Intent(this, ProductActivity.class);
+            startActivity(intent);
+        });
 
         ProductRepository productRepository = new MemoryProductRepository();
 

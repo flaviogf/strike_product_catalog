@@ -1,22 +1,30 @@
 package br.com.flaviogf.strikeproductcatalog.repositories;
 
-import java.math.BigDecimal;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import br.com.flaviogf.strikeproductcatalog.infrastructure.Result;
 import br.com.flaviogf.strikeproductcatalog.models.Product;
 
 public class MemoryProductRepository implements ProductRepository {
+    private final static Map<UUID, Product> products = new HashMap<>();
+
+    @Override
+    public Result<Void> save(Product product) {
+        products.put(product.getId(), product);
+
+        return Result.ok();
+    }
+
     @Override
     public Result<List<Product>> fetch() {
-        List<Product> products = Arrays.asList(
-                new Product(UUID.randomUUID(), "Adidas Alpha", "Size: 41", new BigDecimal("499.99"), "Black", "Shoes"),
-                new Product(UUID.randomUUID(), "Adidas Neo", "Size: 41", new BigDecimal("499.99"), "Black", "Shoes")
-        );
+        List<Product> products = new ArrayList<>(MemoryProductRepository.products.values());
 
-        Result<List<Product>> result = Result.ok(products);
+        Result<List<Product>> result = Result.ok(Collections.unmodifiableList(products));
 
         return result;
     }

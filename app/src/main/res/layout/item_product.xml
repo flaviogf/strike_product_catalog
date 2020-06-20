@@ -17,7 +17,7 @@
             android:id="@+id/item_product_image_image_view"
             android:layout_width="120dp"
             android:layout_height="120dp"
-            android:contentDescription="@string/item_product_image_image_view"
+            android:contentDescription="@string/item_product_image_image_view_content_description"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -31,7 +31,7 @@
             android:layout_marginTop="8dp"
             android:textColor="#000"
             android:textSize="18sp"
-            android:textStyle="bold"
+
             app:layout_constraintStart_toEndOf="@id/item_product_image_image_view"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Black Shoes" />
@@ -44,17 +44,7 @@
             android:textColor="#CCC"
             app:layout_constraintStart_toEndOf="@id/item_product_image_image_view"
             app:layout_constraintTop_toBottomOf="@id/item_product_name_text_view"
-            tools:text="Size: 41" />
-
-        <TextView
-            android:id="@+id/item_product_color_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:textColor="#CCC"
-            app:layout_constraintStart_toEndOf="@id/item_product_description_text_view"
-            app:layout_constraintTop_toBottomOf="@id/item_product_name_text_view"
-            tools:text="Color: Black" />
+            tools:text="Size: 41 Color: Black" />
 
         <TextView
             android:id="@+id/item_product_price_text_view"
@@ -63,7 +53,7 @@
             android:layout_marginStart="16dp"
             android:textColor="#6D9AEF"
             android:textSize="18sp"
-            android:textStyle="bold"
+
             app:layout_constraintStart_toEndOf="@id/item_product_image_image_view"
             app:layout_constraintTop_toBottomOf="@id/item_product_description_text_view"
             tools:text="$ 499.99" />

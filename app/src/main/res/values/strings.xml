@@ -1,4 +1,15 @@
 <resources>
     <string name="app_name">Strike Product Catalog</string>
-    <string name="item_product_image_image_view">Product</string>
+    <string name="item_product_image_image_view_content_description">Product</string>
+    <string name="activity_product_add_image_image_button_content_description">Add a photo</string>
+    <string name="activity_product_name_text_input_layout_hint">Name*</string>
+    <string name="activity_product_price_text_input_layout_hint">Price*</string>
+    <string name="activity_product_description_text_input_layout_hint">Description</string>
+    <string name="activity_product_save_button">Save</string>
+    <string name="item_image_image_content_description">Image</string>
+    <string-array name="categories">
+        <item>Clothing</item>
+        <item>Shoes</item>
+        <item>Watches</item>
+    </string-array>
 </resources>

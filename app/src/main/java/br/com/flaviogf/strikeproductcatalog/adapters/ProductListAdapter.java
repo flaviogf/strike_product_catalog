@@ -10,10 +10,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import br.com.flaviogf.strikeproductcatalog.R;
+import br.com.flaviogf.strikeproductcatalog.infrastructure.Maybe;
+import br.com.flaviogf.strikeproductcatalog.models.Image;
 import br.com.flaviogf.strikeproductcatalog.models.Product;
 
 public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.ProductViewHolder> {
@@ -52,7 +58,6 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
         private final ImageView imageImageView;
         private final TextView nameTextView;
         private final TextView descriptionTextView;
-        private final TextView colorTextView;
         private final TextView priceTextView;
         private final TextView categoryTextView;
 
@@ -62,15 +67,26 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
             imageImageView = itemView.findViewById(R.id.item_product_image_image_view);
             nameTextView = itemView.findViewById(R.id.item_product_name_text_view);
             descriptionTextView = itemView.findViewById(R.id.item_product_description_text_view);
-            colorTextView = itemView.findViewById(R.id.item_product_color_text_view);
             priceTextView = itemView.findViewById(R.id.item_product_price_text_view);
             categoryTextView = itemView.findViewById(R.id.item_product_category_text_view);
         }
 
         public void bind(Product product) {
             nameTextView.setText(product.getName());
-            priceTextView.setText(product.getPrice().toString());
+            descriptionTextView.setText(product.getDescription());
+            NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.US);
+            priceTextView.setText(numberFormat.format(product.getPrice()));
             categoryTextView.setText(product.getCategory());
+
+            Maybe<Image> maybeImage = product.getPrincipalImage();
+
+            if (!maybeImage.hasValue()) {
+                return;
+            }
+
+            Image image = maybeImage.getValue();
+
+            Picasso.get().load(image.getPath()).resize(120, 120).centerCrop().into(imageImageView);
         }
     }
 }

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/item_uri_image_view"
+    android:layout_width="100dp"
+    android:layout_height="100dp"
+    android:layout_marginStart="8dp"
+    android:contentDescription="@string/item_image_image_content_description"
+    tools:background="@android:color/holo_blue_light" />
