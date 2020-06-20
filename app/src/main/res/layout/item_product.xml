@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="16dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginBottom="4dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/item_product_image_image_view"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:contentDescription="@string/item_product_image_image_view"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:background="@android:color/holo_blue_light" />
+
+        <TextView
+            android:id="@+id/item_product_name_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:textColor="#000"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@id/item_product_image_image_view"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Black Shoes" />
+
+        <TextView
+            android:id="@+id/item_product_description_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:textColor="#CCC"
+            app:layout_constraintStart_toEndOf="@id/item_product_image_image_view"
+            app:layout_constraintTop_toBottomOf="@id/item_product_name_text_view"
+            tools:text="Size: 41" />
+
+        <TextView
+            android:id="@+id/item_product_color_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:textColor="#CCC"
+            app:layout_constraintStart_toEndOf="@id/item_product_description_text_view"
+            app:layout_constraintTop_toBottomOf="@id/item_product_name_text_view"
+            tools:text="Color: Black" />
+
+        <TextView
+            android:id="@+id/item_product_price_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:textColor="#6D9AEF"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@id/item_product_image_image_view"
+            app:layout_constraintTop_toBottomOf="@id/item_product_description_text_view"
+            tools:text="$ 499.99" />
+
+        <TextView
+            android:id="@+id/item_product_category_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/item_product_image_image_view"
+            app:layout_constraintTop_toBottomOf="@id/item_product_price_text_view"
+            tools:text="Shoes" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>
