@@ -25,6 +25,7 @@ import br.com.flaviogf.strikeproductcatalog.models.Product;
 public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.ProductViewHolder> {
     private final Context context;
     private final List<Product> products = new ArrayList<>();
+    private OnProductSelectedListener onProductSelectedListener;
 
     public ProductListAdapter(Context context) {
         this.context = context;
@@ -34,7 +35,7 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
     @Override
     public ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_product, parent, false);
-        return new ProductViewHolder(view);
+        return new ProductViewHolder(view, onProductSelectedListener);
     }
 
     @Override
@@ -54,16 +55,26 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
         notifyDataSetChanged();
     }
 
+    public void setOnProductSelectedListener(OnProductSelectedListener onProductSelectedListener) {
+        this.onProductSelectedListener = onProductSelectedListener;
+    }
+
+    public interface OnProductSelectedListener {
+        void onSelect(Product product);
+    }
+
     public static class ProductViewHolder extends RecyclerView.ViewHolder {
+        private final OnProductSelectedListener onProductSelectedListener;
         private final ImageView imageImageView;
         private final TextView nameTextView;
         private final TextView descriptionTextView;
         private final TextView priceTextView;
         private final TextView categoryTextView;
 
-        public ProductViewHolder(@NonNull View itemView) {
+        public ProductViewHolder(@NonNull View itemView, OnProductSelectedListener onProductSelectedListener) {
             super(itemView);
 
+            this.onProductSelectedListener = onProductSelectedListener;
             imageImageView = itemView.findViewById(R.id.item_product_image_image_view);
             nameTextView = itemView.findViewById(R.id.item_product_name_text_view);
             descriptionTextView = itemView.findViewById(R.id.item_product_description_text_view);
@@ -72,6 +83,10 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
         }
 
         public void bind(Product product) {
+            itemView.setOnClickListener((it) -> {
+                onProductSelectedListener.onSelect(product);
+            });
+
             nameTextView.setText(product.getName());
             descriptionTextView.setText(product.getDescription());
             NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.US);

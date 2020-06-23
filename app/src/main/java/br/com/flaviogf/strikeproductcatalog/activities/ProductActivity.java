@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -19,10 +20,12 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.UUID;
 
 import br.com.flaviogf.strikeproductcatalog.R;
 import br.com.flaviogf.strikeproductcatalog.adapters.ImageListAdapter;
+import br.com.flaviogf.strikeproductcatalog.extensions.SpinnerExtensions;
 import br.com.flaviogf.strikeproductcatalog.infrastructure.Maybe;
 import br.com.flaviogf.strikeproductcatalog.models.Image;
 import br.com.flaviogf.strikeproductcatalog.models.Product;
@@ -37,6 +40,7 @@ public class ProductActivity extends AppCompatActivity {
     private ImageListAdapter imageListAdapter;
     private ImageButton addImageImageButton;
     private RecyclerView imageRecyclerView;
+    private EditText idEditText;
     private TextInputLayout nameTextInputLayout;
     private TextInputLayout priceTextInputLayout;
     private TextInputLayout descriptionTextInputLayout;
@@ -55,6 +59,8 @@ public class ProductActivity extends AppCompatActivity {
         addImageImageButton = findViewById(R.id.activity_product_add_image_image_button);
 
         imageRecyclerView = findViewById(R.id.activity_product_image_recycler_view);
+
+        idEditText = findViewById(R.id.activity_product_id_edit_text);
 
         nameTextInputLayout = findViewById(R.id.activity_product_name_text_input_layout);
 
@@ -83,6 +89,8 @@ public class ProductActivity extends AppCompatActivity {
         ProductViewModelFactory factory = new ProductViewModelFactory(productRepository);
 
         viewModel = new ViewModelProvider(this, factory).get(ProductViewModel.class);
+
+        fillFields();
     }
 
     @Override
@@ -106,6 +114,37 @@ public class ProductActivity extends AppCompatActivity {
         }
     }
 
+    private void fillFields() {
+        Maybe<UUID> maybeProductId = Maybe.of((UUID) getIntent().getSerializableExtra("@product-id"));
+
+        if (!maybeProductId.hasValue()) {
+            idEditText.setText(UUID.randomUUID().toString());
+            return;
+        }
+
+        UUID productId = maybeProductId.getValue();
+
+        viewModel.fetchOne(productId).observe(this, (result) -> {
+            if (result.isFailure()) {
+                idEditText.setText(UUID.randomUUID().toString());
+                return;
+            }
+
+            Product product = result.getValue();
+
+            imageListAdapter.setImages(product.getImages());
+
+            idEditText.setText(product.getId().toString());
+            nameTextInputLayout.getEditText().setText(product.getName());
+            priceTextInputLayout.getEditText().setText(product.getPrice().toString());
+            descriptionTextInputLayout.getEditText().setText(product.getDescription());
+
+            String[] categories = getResources().getStringArray(R.array.categories);
+
+            SpinnerExtensions.setSelection(categoriesSpinner, categories, product.getCategory());
+        });
+    }
+
     private void saveProduct() {
         Maybe<Product> maybeProduct = getProduct();
 
@@ -127,6 +166,8 @@ public class ProductActivity extends AppCompatActivity {
     }
 
     private Maybe<Product> getProduct() {
+        String id = idEditText.getText().toString();
+
         String name = nameTextInputLayout.getEditText().getText().toString();
 
         String price = priceTextInputLayout.getEditText().getText().toString();
@@ -135,7 +176,11 @@ public class ProductActivity extends AppCompatActivity {
 
         String category = categoriesSpinner.getSelectedItem().toString();
 
-        Image[] images = imageListAdapter.getImages();
+        Collection<Image> images = imageListAdapter.getImages();
+
+        if (id.isEmpty()) {
+            return Maybe.empty();
+        }
 
         if (name.isEmpty()) {
             return Maybe.empty();
@@ -153,13 +198,15 @@ public class ProductActivity extends AppCompatActivity {
             return Maybe.empty();
         }
 
-        if (images.length == 0) {
+        if (images.isEmpty()) {
             return Maybe.empty();
         }
 
-        Product product = new Product(UUID.randomUUID(), name, description, new BigDecimal(price), category);
+        Product product = new Product(UUID.fromString(id), name, description, new BigDecimal(price), category);
 
-        product.addImage(images);
+        Image[] array = new Image[images.size()];
+
+        product.addImage(images.toArray(array));
 
         return Maybe.of(product);
     }

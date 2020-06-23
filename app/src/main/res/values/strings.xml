@@ -7,6 +7,7 @@
     <string name="activity_product_description_text_input_layout_hint">Description</string>
     <string name="activity_product_save_button">Save</string>
     <string name="item_image_image_content_description">Image</string>
+    <string name="activity_product_id_edit_text">Id</string>
     <string-array name="categories">
         <item>Clothing</item>
         <item>Shoes</item>

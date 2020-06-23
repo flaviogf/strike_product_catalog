@@ -39,6 +39,12 @@ public class ProductsActivity extends AppCompatActivity {
 
         floatingActionButton = findViewById(R.id.activity_products_floating_action_button);
 
+        productListAdapter.setOnProductSelectedListener((it) -> {
+            Intent intent = new Intent(this, ProductActivity.class);
+            intent.putExtra("@product-id", it.getId());
+            startActivity(intent);
+        });
+
         recyclerView.setAdapter(productListAdapter);
 
         floatingActionButton.setOnClickListener(it -> {

@@ -28,4 +28,15 @@ public class MemoryProductRepository implements ProductRepository {
 
         return result;
     }
+
+    @Override
+    public Result<Product> fetchOne(UUID id) {
+        if (!products.containsKey(id)) {
+            return Result.fail("Product does not exist");
+        }
+
+        Product product = products.get(id);
+
+        return Result.ok(product);
+    }
 }

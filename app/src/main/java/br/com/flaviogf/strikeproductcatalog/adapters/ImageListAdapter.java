@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import br.com.flaviogf.strikeproductcatalog.R;
@@ -48,10 +50,13 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.Imag
         notifyDataSetChanged();
     }
 
-    public Image[] getImages() {
-        Image[] array = new Image[images.size()];
-        images.toArray(array);
-        return array;
+    public void setImages(Collection<Image> images) {
+        this.images.clear();
+        this.images.addAll(images);
+    }
+
+    public Collection<Image> getImages() {
+        return Collections.unmodifiableList(images);
     }
 
     public static class ImageViewHolder extends RecyclerView.ViewHolder {
