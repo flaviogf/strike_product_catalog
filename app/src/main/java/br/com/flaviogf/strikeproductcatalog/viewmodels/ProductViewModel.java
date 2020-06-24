@@ -36,4 +36,14 @@ public class ProductViewModel extends ViewModel {
 
         return liveData;
     }
+
+    public LiveData<Result<Void>> remove(Product product) {
+        MutableLiveData<Result<Void>> liveData = new MutableLiveData<>();
+
+        Result<Void> result = productRepository.remove(product);
+
+        liveData.setValue(result);
+
+        return liveData;
+    }
 }

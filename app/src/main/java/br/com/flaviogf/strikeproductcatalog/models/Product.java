@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 import br.com.flaviogf.strikeproductcatalog.infrastructure.Maybe;
+import br.com.flaviogf.strikeproductcatalog.infrastructure.Result;
 
 @Entity
 public class Product {
@@ -30,6 +31,7 @@ public class Product {
         this.images = images;
     }
 
+    @NonNull
     public UUID getId() {
         return id;
     }
@@ -61,5 +63,25 @@ public class Product {
         } catch (IndexOutOfBoundsException ex) {
             return Maybe.empty();
         }
+    }
+
+    public Maybe<Image> getImage(UUID imageId) {
+        for (Image image : images) {
+            if (image.getId().equals(imageId)) {
+                return Maybe.of(image);
+            }
+        }
+
+        return Maybe.empty();
+    }
+
+    public Result<Void> remove(Image image) {
+        if (images.size() <= 1) {
+            return Result.fail("Product must be least one image");
+        }
+
+        images.remove(image);
+
+        return Result.ok();
     }
 }

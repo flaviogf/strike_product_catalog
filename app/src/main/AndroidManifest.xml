@@ -28,6 +28,8 @@
 
         <activity android:name=".activities.ProductActivity" />
 
+        <activity android:name=".activities.ImageActivity" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="br.com.flaviogf.strikeproductcatalog.android.fileprovider"

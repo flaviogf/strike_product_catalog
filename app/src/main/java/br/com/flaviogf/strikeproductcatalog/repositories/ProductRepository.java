@@ -12,4 +12,6 @@ public interface ProductRepository {
     Result<List<Product>> fetch();
 
     Result<Product> fetchOne(UUID id);
+
+    Result<Void> remove(Product product);
 }

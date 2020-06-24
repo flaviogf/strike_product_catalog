@@ -8,12 +8,15 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -43,9 +46,10 @@ import static br.com.flaviogf.strikeproductcatalog.extensions.ActivityExtensions
 import static br.com.flaviogf.strikeproductcatalog.extensions.SpinnerExtensions.setSelection;
 
 public class ProductActivity extends AppCompatActivity {
-    private static final int REQUEST_OPEN_CAMERA_CODE = 0;
-    private static final int REQUEST_OPEN_GALLERY_CODE = 1;
-    private static final int REQUEST_PERMISSIONS_CODE = 2;
+    public static final int REQUEST_OPEN_CAMERA_CODE = 0;
+    public static final int REQUEST_OPEN_GALLERY_CODE = 1;
+    public static final int REQUEST_PERMISSIONS_CODE = 2;
+    public static final int REQUEST_IMAGE_ACTIVITY_CODE = 3;
 
     private ImageListAdapter imageListAdapter;
     private ImageButton addImageImageButton;
@@ -84,6 +88,22 @@ public class ProductActivity extends AppCompatActivity {
 
         saveButton = findViewById(R.id.activity_product_save_button);
 
+        imageListAdapter.setOnImageSelectedListener(it -> {
+            Maybe<UUID> maybeProductId = Maybe.of((UUID) getIntent().getSerializableExtra("@product-id"));
+
+            if (!maybeProductId.hasValue()) {
+                return;
+            }
+
+            UUID productId = maybeProductId.getValue();
+
+            Intent intent = new Intent(this, ImageActivity.class);
+            intent.putExtra("@product-id", productId);
+            intent.putExtra("@image-id", it.getId());
+
+            startActivityForResult(intent, REQUEST_IMAGE_ACTIVITY_CODE);
+        });
+
         imageRecyclerView.setAdapter(imageListAdapter);
 
         addImageImageButton.setOnClickListener(it -> {
@@ -118,6 +138,38 @@ public class ProductActivity extends AppCompatActivity {
         viewModel = new ViewModelProvider(this, factory).get(ProductViewModel.class);
 
         fillFields();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        Maybe<UUID> maybeProductId = Maybe.of((UUID) getIntent().getSerializableExtra("@product-id"));
+
+        if (!maybeProductId.hasValue()) {
+            return super.onCreateOptionsMenu(menu);
+        }
+
+        getMenuInflater().inflate(R.menu.activity_product_options_menu, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.activity_product_remove_options_menu:
+                new AlertDialog
+                        .Builder(this)
+                        .setTitle("Remove product")
+                        .setMessage("Are you sure you want to remove this product?")
+                        .setNegativeButton("Cancel", null)
+                        .setPositiveButton("Confirm", (dialogInterface, i) -> {
+                            removeProduct();
+                        })
+                        .show();
+                break;
+        }
+
+        return false;
     }
 
     @Override
@@ -156,6 +208,10 @@ public class ProductActivity extends AppCompatActivity {
             Image image = new Image(UUID.randomUUID(), name, path, ext);
 
             imageListAdapter.add(image);
+        }
+
+        if (requestCode == REQUEST_IMAGE_ACTIVITY_CODE && resultCode == RESULT_OK) {
+            fillFields();
         }
     }
 
@@ -245,6 +301,26 @@ public class ProductActivity extends AppCompatActivity {
         });
     }
 
+    private void removeProduct() {
+        Maybe<Product> maybeProduct = getProduct();
+
+        if (!maybeProduct.hasValue()) {
+            Toast.makeText(this, "Enter all data", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Product product = maybeProduct.getValue();
+
+        viewModel.remove(product).observe(this, result -> {
+            if (result.isFailure()) {
+                Toast.makeText(this, result.getMessage(), Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            finish();
+        });
+    }
+
     private Maybe<Product> getProduct() {
         String id = idEditText.getText().toString();
 
@@ -289,7 +365,9 @@ public class ProductActivity extends AppCompatActivity {
 
     private Maybe<Image> getImage(Uri uri) {
         @SuppressWarnings("deprecation")
-        Cursor cursor = managedQuery(uri, null, null, null, null);
+        String[] projection = {MediaStore.Images.Media.DATA};
+
+        Cursor cursor = managedQuery(uri, projection, null, null, null);
 
         int index = cursor.getColumnIndex(MediaStore.Images.Media.DATA);
 
@@ -298,7 +376,11 @@ public class ProductActivity extends AppCompatActivity {
         String pathname = cursor.getString(index);
 
         if (pathname == null) {
-            return Maybe.empty();
+            String name = "";
+            String path = uri.toString();
+            String ext = "";
+            Image image = new Image(UUID.randomUUID(), name, path, ext);
+            return Maybe.of(image);
         }
 
         File file = new File(pathname);

@@ -8,6 +8,9 @@
     <string name="activity_product_save_button">Save</string>
     <string name="item_image_image_content_description">Image</string>
     <string name="activity_product_id_edit_text">Id</string>
+    <string name="activity_product_delete_options_menu">Delete</string>
+    <string name="activity_image_image_view">Image</string>
+    <string name="activity_image_button_text">Remove</string>
     <string-array name="categories">
         <item>Clothing</item>
         <item>Shoes</item>

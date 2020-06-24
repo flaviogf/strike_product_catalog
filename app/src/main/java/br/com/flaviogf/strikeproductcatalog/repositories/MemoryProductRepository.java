@@ -39,4 +39,11 @@ public class MemoryProductRepository implements ProductRepository {
 
         return Result.ok(product);
     }
+
+    @Override
+    public Result<Void> remove(Product product) {
+        products.remove(product.getId());
+
+        return Result.ok();
+    }
 }

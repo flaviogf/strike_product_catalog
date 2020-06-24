@@ -38,4 +38,11 @@ public class RoomProductRepository implements ProductRepository {
 
         return Result.ok(product);
     }
+
+    @Override
+    public Result<Void> remove(Product product) {
+        productDao.delete(product);
+
+        return Result.ok();
+    }
 }
