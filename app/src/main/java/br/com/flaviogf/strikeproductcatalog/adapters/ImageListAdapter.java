@@ -69,7 +69,7 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.Imag
         }
 
         public void bind(Image image) {
-            Picasso.with(itemView.getContext()).load(image.getPath()).fit().centerCrop().into(imageView);
+            Picasso.get().load(image.getPath()).fit().centerCrop().into(imageView);
         }
     }
 }

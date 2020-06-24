@@ -101,7 +101,7 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
 
             Image image = maybeImage.getValue();
 
-            Picasso.with(itemView.getContext()).load(image.getPath()).resize(120, 120).centerCrop().into(imageImageView);
+            Picasso.get().load(image.getPath()).fit().centerCrop().into(imageImageView);
         }
     }
 }
