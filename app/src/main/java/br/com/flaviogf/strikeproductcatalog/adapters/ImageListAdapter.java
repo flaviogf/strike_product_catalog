@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -50,12 +50,12 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.Imag
         notifyDataSetChanged();
     }
 
-    public void setImages(Collection<Image> images) {
+    public void setImages(List<Image> images) {
         this.images.clear();
         this.images.addAll(images);
     }
 
-    public Collection<Image> getImages() {
+    public List<Image> getImages() {
         return Collections.unmodifiableList(images);
     }
 
@@ -69,7 +69,7 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.Imag
         }
 
         public void bind(Image image) {
-            Picasso.get().load(image.getPath()).resize(100, 100).centerCrop().into(imageView);
+            Picasso.with(itemView.getContext()).load(image.getPath()).fit().centerCrop().into(imageView);
         }
     }
 }

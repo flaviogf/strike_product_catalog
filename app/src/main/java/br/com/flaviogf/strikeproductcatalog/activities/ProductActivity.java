@@ -20,19 +20,20 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.File;
 import java.math.BigDecimal;
-import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 import br.com.flaviogf.strikeproductcatalog.R;
+import br.com.flaviogf.strikeproductcatalog.StrikeProductCatalogApplication;
 import br.com.flaviogf.strikeproductcatalog.adapters.ImageListAdapter;
-import br.com.flaviogf.strikeproductcatalog.extensions.SpinnerExtensions;
 import br.com.flaviogf.strikeproductcatalog.infrastructure.Maybe;
 import br.com.flaviogf.strikeproductcatalog.models.Image;
 import br.com.flaviogf.strikeproductcatalog.models.Product;
-import br.com.flaviogf.strikeproductcatalog.repositories.MemoryProductRepository;
 import br.com.flaviogf.strikeproductcatalog.repositories.ProductRepository;
 import br.com.flaviogf.strikeproductcatalog.viewmodels.ProductViewModel;
 import br.com.flaviogf.strikeproductcatalog.viewmodels.ProductViewModelFactory;
+
+import static br.com.flaviogf.strikeproductcatalog.extensions.SpinnerExtensions.setSelection;
 
 public class ProductActivity extends AppCompatActivity {
     public static final int REQUEST_IMAGE_CODE = 1;
@@ -75,7 +76,7 @@ public class ProductActivity extends AppCompatActivity {
         imageRecyclerView.setAdapter(imageListAdapter);
 
         addImageImageButton.setOnClickListener(it -> {
-            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
             intent.setType("image/*");
             startActivityForResult(Intent.createChooser(intent, "Choose one"), REQUEST_IMAGE_CODE);
         });
@@ -84,7 +85,9 @@ public class ProductActivity extends AppCompatActivity {
             saveProduct();
         });
 
-        ProductRepository productRepository = new MemoryProductRepository();
+        StrikeProductCatalogApplication application = (StrikeProductCatalogApplication) getApplication();
+
+        ProductRepository productRepository = application.productRepository();
 
         ProductViewModelFactory factory = new ProductViewModelFactory(productRepository);
 
@@ -141,7 +144,7 @@ public class ProductActivity extends AppCompatActivity {
 
             String[] categories = getResources().getStringArray(R.array.categories);
 
-            SpinnerExtensions.setSelection(categoriesSpinner, categories, product.getCategory());
+            setSelection(categoriesSpinner, categories, product.getCategory());
         });
     }
 
@@ -176,7 +179,7 @@ public class ProductActivity extends AppCompatActivity {
 
         String category = categoriesSpinner.getSelectedItem().toString();
 
-        Collection<Image> images = imageListAdapter.getImages();
+        List<Image> images = imageListAdapter.getImages();
 
         if (id.isEmpty()) {
             return Maybe.empty();
@@ -202,21 +205,20 @@ public class ProductActivity extends AppCompatActivity {
             return Maybe.empty();
         }
 
-        Product product = new Product(UUID.fromString(id), name, description, new BigDecimal(price), category);
-
-        Image[] array = new Image[images.size()];
-
-        product.addImage(images.toArray(array));
+        Product product = new Product(UUID.fromString(id), name, description, new BigDecimal(price), category, images);
 
         return Maybe.of(product);
     }
 
     private Maybe<Image> getImage(Uri uri) {
-        String[] projection = {MediaStore.Images.Media.DATA};
+        @SuppressWarnings("deprecation")
+        Cursor cursor = managedQuery(uri, null, null, null, null);
 
-        Cursor cursor = managedQuery(uri, projection, null, null, null);
+        int index = cursor.getColumnIndex(MediaStore.Images.Media.DATA);
+
         cursor.moveToNext();
-        String pathname = cursor.getString(0);
+
+        String pathname = cursor.getString(index);
 
         if (pathname == null) {
             return Maybe.empty();

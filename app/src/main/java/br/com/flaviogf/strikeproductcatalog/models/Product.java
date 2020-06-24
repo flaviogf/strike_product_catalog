@@ -1,28 +1,33 @@
 package br.com.flaviogf.strikeproductcatalog.models;
 
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
 import br.com.flaviogf.strikeproductcatalog.infrastructure.Maybe;
 
+@Entity
 public class Product {
-    private final UUID id;
-    private final String name;
-    private final String description;
-    private final BigDecimal price;
-    private final String category;
+    @PrimaryKey
+    @NonNull
+    private UUID id;
+    private String name;
+    private String description;
+    private BigDecimal price;
+    private String category;
     private final List<Image> images;
 
-    public Product(UUID id, String name, String description, BigDecimal price, String category) {
+    public Product(@NonNull UUID id, String name, String description, BigDecimal price, String category, List<Image> images) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
         this.category = category;
-        this.images = new ArrayList<>();
+        this.images = images;
     }
 
     public UUID getId() {
@@ -45,6 +50,10 @@ public class Product {
         return category;
     }
 
+    public List<Image> getImages() {
+        return images;
+    }
+
     public Maybe<Image> getPrincipalImage() {
         try {
             Image image = images.get(0);
@@ -52,13 +61,5 @@ public class Product {
         } catch (IndexOutOfBoundsException ex) {
             return Maybe.empty();
         }
-    }
-
-    public List<Image> getImages() {
-        return images;
-    }
-
-    public void addImage(Image... images) {
-        this.images.addAll(Arrays.asList(images));
     }
 }

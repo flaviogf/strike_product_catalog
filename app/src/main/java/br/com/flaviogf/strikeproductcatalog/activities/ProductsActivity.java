@@ -14,9 +14,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.List;
 
 import br.com.flaviogf.strikeproductcatalog.R;
+import br.com.flaviogf.strikeproductcatalog.StrikeProductCatalogApplication;
 import br.com.flaviogf.strikeproductcatalog.adapters.ProductListAdapter;
 import br.com.flaviogf.strikeproductcatalog.models.Product;
-import br.com.flaviogf.strikeproductcatalog.repositories.MemoryProductRepository;
 import br.com.flaviogf.strikeproductcatalog.repositories.ProductRepository;
 import br.com.flaviogf.strikeproductcatalog.viewmodels.ProductsViewModel;
 import br.com.flaviogf.strikeproductcatalog.viewmodels.ProductsViewModelFactory;
@@ -52,7 +52,9 @@ public class ProductsActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        ProductRepository productRepository = new MemoryProductRepository();
+        StrikeProductCatalogApplication application = (StrikeProductCatalogApplication) getApplication();
+
+        ProductRepository productRepository = application.productRepository();
 
         ProductsViewModelFactory factory = new ProductsViewModelFactory(productRepository);
 
