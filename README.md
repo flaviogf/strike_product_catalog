@@ -14,7 +14,7 @@
 
 :clipboard: Strike Product Catalog
 
-This project was made for study purposes only, as a proof of concept from recent studies on android app development.
+This project was made for study purposes only, as an exam to test my studies about android.
 
 ### Preview
 
