@@ -14,7 +14,13 @@
 
 :clipboard: Strike Product Catalog
 
+This project was made for study purposes only, as a proof of concept from recent studies on android app development.
+
 ### Preview
+
+<p align="center">
+    <img src="./.github/preview.gif" width="250" />
+</p>
 
 
 ### Functional Requirements
@@ -44,6 +50,10 @@
 - Room
 
 ## :thinking: How to use
+
+1. Clone the repository to your machine
+2. Open the cloned repository in Android Studio
+3. Press Run App
 
 ### Requirements
 
