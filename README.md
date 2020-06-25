@@ -61,8 +61,6 @@ This project was made for study purposes only, as an exam to test my studies abo
 - Android Studio
 - JDK 8 or higher
 
-## :notebook: Notes
-
 ## :memo: License
 
 This project is under the GNU license. See more at [LICENSE](LICENSE) file for more information.
