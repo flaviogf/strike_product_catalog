@@ -12,9 +12,7 @@
 
 ## :rocket: Project
 
-:clipboard: Strike Product Catalog
-
-This project was made for study purposes only, as an exam to test my studies about android.
+:clipboard: This project was made for study purposes only, as an exam to test my studies about android.
 
 ### Preview
 
